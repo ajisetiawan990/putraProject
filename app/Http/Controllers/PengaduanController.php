@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\Pengaduan;
+
+class PengaduanController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware(['auth','role:admin']);
+    }
+
+    public function dashboard()
+    {
+        $data = Pengaduan::with(['user','tanggapans'])->get();
+        return view('admin.dashboard', compact('data'));
+    }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $pengaduan = Pengaduan::findOrFail($id);
+        $pengaduan->update(['status'=>$request->status ?? 'selesai']);
+        return back()->with('success','Status diubah menjadi '.$pengaduan->status);
+    }
+}
