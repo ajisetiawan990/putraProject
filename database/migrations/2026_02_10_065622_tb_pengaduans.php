@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tb_pengaduans', function (Blueprint $table) {
-            $table->id('id_pengaduan');
+            $table->id('id');
             $table->date('tgl_pengaduan');
             $table->foreignId('id_user')->constrained('users')->cascadeOnDelete();
             $table->text('isi_laporan');
