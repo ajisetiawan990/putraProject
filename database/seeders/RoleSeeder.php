@@ -12,7 +12,7 @@ class RoleSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+    public function run(): void // Data seeder untuk membuat data di laravel
     {
         User::create([
             'name' => 'Admin',

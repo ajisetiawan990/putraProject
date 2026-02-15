@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('tb_pengaduans', function (Blueprint $table) {
             $table->id('id');
             $table->date('tgl_pengaduan');
-            $table->foreignId('id_user')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('id_user')->constrained('users')->cascadeOnDelete(); // Karna u pakai constrained mau gamau kolom dengan type id, pakai bawaannya laravel aja
             $table->text('isi_laporan');
             $table->enum('status', ['proses','selesai'])->default('proses');
             $table->timestamps();

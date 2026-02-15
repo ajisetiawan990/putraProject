@@ -16,14 +16,21 @@ class PetugasController extends Controller
 
     public function dashboard()
     {
-        $data = Pengaduan::with(['user','tanggapans'])->get();
+        $data = Pengaduan::all();
         return view('petugas.dashboard', compact('data'));
     }
 
-    public function tanggapan(Request $request)
+    public function create($id)
+    {
+        // Ambil pengaduan berdasarkan ID dari route
+        $data = Pengaduan::findOrFail($id);
+
+        return view('petugas.create', compact('data'));
+    }
+
+    public function store(Request $request)
     {
         $request->validate([
-            'id_pengaduan'=>'required|exists:pengaduans,id_pengaduan',
             'tanggapan'=>'required|string'
         ]);
 
@@ -34,6 +41,6 @@ class PetugasController extends Controller
             'tanggapan'   => $request->tanggapan
         ]);
 
-        return back()->with('success','Tanggapan berhasil dikirim');
+        return redirect()->route('petugas.dashboard')->with('success','Tanggapan berhasil dikirim');
     }
 }

@@ -39,9 +39,4 @@ class User extends Authenticatable
     {
         return $this->hasMany(Tanggapan::class, 'id_user', 'id');
     }
-
-    // Helper role check
-    public function isMasyarakat() { return $this->role === 'masyarakat'; }
-    public function isPetugas()    { return $this->role === 'petugas'; }
-    public function isAdmin()      { return $this->role === 'admin'; }
 }

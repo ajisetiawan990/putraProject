@@ -22,13 +22,15 @@
                 </span>
             </p>
 
-            @if($laporan->tanggapans->count())
+            @if($laporan->tanggapans)
                 <div class="mt-3 bg-gray-50 p-2 rounded">
                     <p class="text-sm font-bold text-gray-700">Tanggapan:</p>
-                    @foreach($laporan->tanggapans as $tanggapan)
-                        <p class="text-sm text-gray-600">{{ $tanggapan->tanggapan }} 
-                        <span class="text-gray-400 text-xs">({{ $tanggapan->tgl_tanggapan }})</span></p>
-                    @endforeach
+                    @if($laporan->tanggapans)
+                        <p>{{ $laporan->tanggapans->tanggapan }}</p>
+                        <span class="text-gray-400 text-xs">({{ $laporan->tanggapans->tgl_tanggapan }})</span></p>
+                    @else
+                        <span class="text-muted">Belum ada tanggapan</span>
+                    @endif
                 </div>
             @endif
         </div>

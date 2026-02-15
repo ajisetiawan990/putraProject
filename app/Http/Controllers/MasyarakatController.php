@@ -8,14 +8,9 @@ use Illuminate\Support\Facades\Auth;
 
 class MasyarakatController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth','role:masyarakat']);
-    }
-
     public function dashboard()
     {
-        $data = Auth::user()->pengaduans()->with('tanggapans')->latest()->get();
+        $data = Pengaduan::all(); // -> Terlalu ribet dan bakal susah di jelasin, pakai lazy load biar mulus
         return view('masyarakat.dashboard', compact('data'));
     }
 

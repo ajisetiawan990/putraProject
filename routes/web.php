@@ -1,65 +1,35 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\MasyarakatController;
 use App\Http\Controllers\PetugasController;
-use App\Http\Controllers\PengaduanController;
-use App\Http\Controllers\TanggapanController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RedirectController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
 | HALAMAN AWAL
 |--------------------------------------------------------------------------
 */
-
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn() => view('welcome'));
 
 /*
 |--------------------------------------------------------------------------
 | REDIRECT BERDASARKAN ROLE
 |--------------------------------------------------------------------------
 */
-
-Route::middleware('auth')->get('/redirect', function () {
-    $role = strtolower(auth()->user()->role); // amankan huruf besar kecil
-
-    switch ($role) {
-        case 'admin':
-            return redirect()->route('admin.dashboard');
-
-        case 'petugas':
-            return redirect()->route('petugas.dashboard');
-
-        case 'masyarakat':
-            return redirect()->route('masyarakat.dashboard');
-
-        default:
-            abort(403, 'Role tidak dikenali');
-    }
-})->name('redirect');
+Route::middleware('auth')->get('/redirect', [RedirectController::class, 'handle'])->name('redirect');
 
 /*
 |--------------------------------------------------------------------------
 | MASYARAKAT
 |--------------------------------------------------------------------------
 */
-
-Route::middleware(['auth', 'role:masyarakat'])
-    ->prefix('masyarakat')
-    ->name('masyarakat.')
-    ->group(function () {
-
-        Route::get('/', [MasyarakatController::class, 'dashboard'])
-            ->name('dashboard');
-
-        Route::get('/create', [MasyarakatController::class, 'create'])
-            ->name('create');
-
-        Route::post('/store', [MasyarakatController::class, 'store'])
-            ->name('store');
+Route::middleware(['auth', 'role:masyarakat'])->prefix('masyarakat')->name('masyarakat.')->group(function () {
+        Route::get('/', [MasyarakatController::class, 'dashboard'])->name('dashboard');
+        Route::get('/create', [MasyarakatController::class, 'create'])->name('create');
+        Route::post('/store', [MasyarakatController::class, 'store'])->name('store');
     });
 
 /*
@@ -67,36 +37,21 @@ Route::middleware(['auth', 'role:masyarakat'])
 | PETUGAS
 |--------------------------------------------------------------------------
 */
-
-Route::middleware(['auth', 'role:petugas'])
-    ->prefix('petugas')
-    ->name('petugas.')
-    ->group(function () {
-
-        Route::get('/', [PetugasController::class, 'dashboard'])
-            ->name('dashboard');
-
-        // Tanggapan pakai TanggapanController store
-        Route::post('/tanggapan', [TanggapanController::class, 'store'])
-            ->name('tanggapan.store');
+Route::middleware(['auth', 'role:petugas'])->prefix('petugas')->name('petugas.')->group(function () {
+        Route::get('/', [PetugasController::class, 'dashboard'])->name('dashboard');
+        Route::get('/tanggapan/{id}', [PetugasController::class, 'create'])->name('tanggapan.create');
+        Route::post('/tanggapan', [PetugasController::class, 'store'])->name('tanggapan.store');
     });
+
 
 /*
 |--------------------------------------------------------------------------
 | ADMIN
 |--------------------------------------------------------------------------
 */
-
-Route::middleware(['auth', 'role:admin'])
-    ->prefix('admin')
-    ->name('admin.')
-    ->group(function () {
-
-        Route::get('/', [PengaduanController::class, 'dashboard'])
-            ->name('dashboard');
-
-        Route::put('/status/{id}', [PengaduanController::class, 'updateStatus'])
-            ->name('update.status');
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
+        Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::put('/status/{id}', [AdminController::class, 'updateStatus'])->name('update.status');
     });
 
 /*
@@ -104,11 +59,10 @@ Route::middleware(['auth', 'role:admin'])
 | PROFILE ROUTES (semua user)
 |--------------------------------------------------------------------------
 */
-
-Route::middleware('auth')->group(function () {
-    Route::get('profile/edit',[ProfileController::class,'edit'])->name('profile.edit');
-    Route::patch('profile',[ProfileController::class,'update'])->name('profile.update');
-    Route::delete('profile',[ProfileController::class,'destroy'])->name('profile.destroy');
+Route::middleware('auth')->name('profile.')->group(function () {
+    Route::get('edit', [ProfileController::class,'edit'])->name('edit');
+    Route::patch('/', [ProfileController::class,'update'])->name('update');
+    Route::delete('/', [ProfileController::class,'destroy'])->name('destroy');
 });
 
 /*
@@ -116,5 +70,4 @@ Route::middleware('auth')->group(function () {
 | AUTH (BREEZE)
 |--------------------------------------------------------------------------
 */
-
 require __DIR__.'/auth.php';

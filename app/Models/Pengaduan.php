@@ -8,7 +8,6 @@ class Pengaduan extends Model
 {
     // Sesuaikan nama tabel
     protected $table = 'tb_pengaduans';
-    protected $primaryKey = 'id_pengaduan';
 
     protected $fillable = [
         'tgl_pengaduan',
@@ -17,14 +16,14 @@ class Pengaduan extends Model
         'status'
     ];
 
-    public function masyarakat()
+    public function user()
     {
-        return $this->belongsTo(Masyarakat::class, 'id_user');
+        return $this->belongsTo(User::class, 'id_user');
     }
 
     public function tanggapans()
     {
         // Tambahkan nama tabel yang benar di relasi
-        return $this->hasMany(Tanggapan::class, 'id_pengaduan');
+        return $this->hasOne(Tanggapan::class, 'id_pengaduan'); // Klo pakai hasMany diakan banyak jadi harus pakai count agar tidak error
     }
 }
