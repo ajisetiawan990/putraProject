@@ -9,11 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PetugasController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth','role:petugas']);
-    }
-
     public function dashboard()
     {
         $data = Pengaduan::all();
